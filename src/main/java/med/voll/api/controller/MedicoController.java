@@ -6,10 +6,10 @@ import med.voll.api.medicos.DadosCadastroMedico;
 import med.voll.api.medicos.DadosListagemMedico;
 import med.voll.api.medicos.Medico;
 import med.voll.api.medicos.MedicoRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @SuppressWarnings("ClassHasNoToStringMethod")
 @RestController
@@ -18,13 +18,13 @@ public class MedicoController {
 
     private final MedicoRepository medicoRepository;
 
-    public MedicoController(MedicoRepository medicoRepository){
+    public MedicoController(MedicoRepository medicoRepository) {
         this.medicoRepository = medicoRepository;
     }
 
     @PostMapping
     @Transactional
-    public String cadastrar(@RequestBody @Valid DadosCadastroMedico dados){
+    public String cadastrar(@RequestBody @Valid DadosCadastroMedico dados) {
 
         System.out.println(dados);
 
@@ -34,14 +34,9 @@ public class MedicoController {
     }
 
     @GetMapping
-    public List<DadosListagemMedico> listar(){
-// List<DadosListagemMedico> list = new ArrayList<>();
-// for (Medico medico : medicoRepository.findAll()) {
-//     DadosListagemMedico dadosListagemMedico = new DadosListagemMedico(medico);
-//     list.add(dadosListagemMedico);
-// }
-// return list;
-        return medicoRepository.findAll().stream().map(DadosListagemMedico::new).toList();
+    public Page<DadosListagemMedico> listar(@PageableDefault(size = 5, sort = {"nome"}) Pageable paginacao) {
+
+        return medicoRepository.findAll(paginacao).map(DadosListagemMedico::new);
     }
 
 
