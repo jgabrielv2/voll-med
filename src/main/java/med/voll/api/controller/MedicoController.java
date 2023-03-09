@@ -44,5 +44,12 @@ public class MedicoController {
         return "Deu certo a atualização meu pasero";
     }
 
+    @DeleteMapping("{id}")
+    @Transactional
+    public String excluir(@PathVariable Long id){
+        medicoRepository.deleteById(id);
+        return "Excluiu o médico meu pasero";
+    }
+
 
 }
