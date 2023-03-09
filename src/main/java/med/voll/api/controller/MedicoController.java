@@ -2,10 +2,7 @@ package med.voll.api.controller;
 
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
-import med.voll.api.medicos.DadosCadastroMedico;
-import med.voll.api.medicos.DadosListagemMedico;
-import med.voll.api.medicos.Medico;
-import med.voll.api.medicos.MedicoRepository;
+import med.voll.api.medicos.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -30,13 +27,21 @@ public class MedicoController {
 
         medicoRepository.save(new Medico(dados));
 
-        return "Deu certo pasero";
+        return "Deu certo o cadastro meu pasero";
     }
 
     @GetMapping
     public Page<DadosListagemMedico> listar(@PageableDefault(size = 5, sort = {"nome"}) Pageable paginacao) {
 
         return medicoRepository.findAll(paginacao).map(DadosListagemMedico::new);
+    }
+
+    @PutMapping
+    @Transactional
+    public String atualizar(@RequestBody @Valid DadosAtualizacaoMedico dados){
+        Medico m = medicoRepository.getReferenceById(dados.id());
+        m.atualizarInformacoes(dados);
+        return "Deu certo a atualização meu pasero";
     }
 
 
