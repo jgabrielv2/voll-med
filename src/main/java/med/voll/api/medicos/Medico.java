@@ -37,7 +37,10 @@ public class Medico {
     @Embedded
     private Endereco endereco;
 
+    private boolean ativo;
+
     public Medico (DadosCadastroMedico dadosCadastroMedico){
+        this.ativo = true;
         this.nome = dadosCadastroMedico.nome();
         this.crm = dadosCadastroMedico.crm();
         this.email = dadosCadastroMedico.email();
@@ -74,5 +77,9 @@ public class Medico {
     @Override
     public int hashCode() {
         return getClass().hashCode();
+    }
+
+    public void excluir() {
+        this.ativo = false;
     }
 }
