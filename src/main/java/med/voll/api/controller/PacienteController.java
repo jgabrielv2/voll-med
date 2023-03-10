@@ -38,6 +38,13 @@ public class PacienteController {
         return "Paciente atualizado meu pasero";
     }
 
+    @DeleteMapping("{id}")
+    @Transactional
+    public String excluir(@PathVariable Long id){
+        Paciente p = pacienteRepository.getReferenceById(id);
+        p.excluir();
+        return "Inativaste o paciente, meu pasero";
+    }
 
 
 
