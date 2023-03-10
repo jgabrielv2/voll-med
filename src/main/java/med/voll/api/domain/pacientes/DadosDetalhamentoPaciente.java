@@ -1,8 +1,6 @@
-package med.voll.api.pacientes;
+package med.voll.api.domain.pacientes;
 
-import med.voll.api.endereco.Endereco;
-
-import java.io.Serializable;
+import med.voll.api.domain.endereco.Endereco;
 
 /**
  * A DTO for the {@link Paciente} entity

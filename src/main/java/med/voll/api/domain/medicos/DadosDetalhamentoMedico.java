@@ -1,13 +1,9 @@
-package med.voll.api.medicos;
+package med.voll.api.domain.medicos;
 
-import med.voll.api.endereco.Endereco;
-import med.voll.api.medicos.Especialidade;
-import med.voll.api.medicos.Medico;
-
-import java.io.Serializable;
+import med.voll.api.domain.endereco.Endereco;
 
 /**
- * A DTO for the {@link med.voll.api.medicos.Medico} entity
+ * A DTO for the {@link Medico} entity
  */
 public record DadosDetalhamentoMedico(Long id, String nome, String email, String telefone, String crm,
                                       Especialidade especialidade, Endereco endereco) {
