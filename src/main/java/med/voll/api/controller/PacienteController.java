@@ -6,8 +6,11 @@ import med.voll.api.pacientes.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
+@SuppressWarnings("ClassHasNoToStringMethod")
 @RestController
 @RequestMapping("pacientes")
 public class PacienteController {
@@ -20,30 +23,35 @@ public class PacienteController {
 
     @PostMapping
     @Transactional
-    public String cadastrar(@RequestBody @Valid DadosCadastroPaciente dados){
-        pacienteRepository.save(new Paciente(dados));
-        return "Paciente cadastrado com sucesso meu pasero";
+    public ResponseEntity cadastrar(@RequestBody @Valid DadosCadastroPaciente dados, UriComponentsBuilder uriComponentsBuilder){
+        Paciente p = new Paciente(dados);
+        pacienteRepository.save(p);
+
+        var uri = uriComponentsBuilder.path("/pacientes/{id}").buildAndExpand(p.getId()).toUri();
+
+        return ResponseEntity.created(uri).body(new DadosDetalhamentoPaciente(p));
     }
 
     @GetMapping
-    public Page<DadosListagemPaciente> listar(@PageableDefault(size = 10, sort = {"nome"}) Pageable paginacao){
-        return pacienteRepository.findAllByAtivoTrue(paginacao).map(DadosListagemPaciente::new);
+    public ResponseEntity<Page<DadosListagemPaciente>> listar(@PageableDefault(size = 10, sort = {"nome"}) Pageable paginacao){
+        Page<DadosListagemPaciente> listagemPacientes = pacienteRepository.findAllByAtivoTrue(paginacao).map(DadosListagemPaciente::new);
+        return ResponseEntity.ok(listagemPacientes);
     }
 
     @PutMapping
     @Transactional
-    public String atualizar(@RequestBody DadosAtualizacaoPaciente dados){
+    public ResponseEntity atualizar(@RequestBody DadosAtualizacaoPaciente dados){
         Paciente p = pacienteRepository.getReferenceById(dados.id());
         p.atualizarInformacoes(dados);
-        return "Paciente atualizado meu pasero";
+        return ResponseEntity.ok(new DadosDetalhamentoPaciente(p));
     }
 
     @DeleteMapping("{id}")
     @Transactional
-    public String excluir(@PathVariable Long id){
+    public ResponseEntity excluir(@PathVariable Long id){
         Paciente p = pacienteRepository.getReferenceById(id);
         p.excluir();
-        return "Inativaste o paciente, meu pasero";
+        return ResponseEntity.noContent().build();
     }
 
 
