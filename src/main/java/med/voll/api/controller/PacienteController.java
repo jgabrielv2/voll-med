@@ -32,6 +32,12 @@ public class PacienteController {
         return ResponseEntity.created(uri).body(new DadosDetalhamentoPaciente(p));
     }
 
+@GetMapping("{id}")
+    public ResponseEntity detalhar(@PathVariable Long id){
+        Paciente p = pacienteRepository.getReferenceById(id);
+        return ResponseEntity.ok(new DadosDetalhamentoPaciente(p));
+    }
+
     @GetMapping
     public ResponseEntity<Page<DadosListagemPaciente>> listar(@PageableDefault(size = 10, sort = {"nome"}) Pageable paginacao){
         Page<DadosListagemPaciente> listagemPacientes = pacienteRepository.findAllByAtivoTrue(paginacao).map(DadosListagemPaciente::new);

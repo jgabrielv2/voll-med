@@ -33,6 +33,12 @@ public class MedicoController {
         return ResponseEntity.created(uri).body(new DadosDetalhamentoMedico(m));
     }
 
+    @GetMapping("{id}")
+    public ResponseEntity detalhar(@PathVariable Long id){
+        Medico m = medicoRepository.getReferenceById(id);
+        return ResponseEntity.ok(new DadosDetalhamentoMedico(m));
+    }
+
     @GetMapping
     public ResponseEntity<Page<DadosListagemMedico>> listar(@PageableDefault(size = 5, sort = {"nome"}) Pageable paginacao) {
 
