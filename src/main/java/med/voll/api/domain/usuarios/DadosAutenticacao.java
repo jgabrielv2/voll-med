@@ -1,4 +1,4 @@
-package med.voll.api.domain.usuario;
+package med.voll.api.domain.usuarios;
 
 /**
  * A DTO for the {@link Usuario} entity
