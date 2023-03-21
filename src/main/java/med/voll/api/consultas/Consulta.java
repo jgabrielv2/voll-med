@@ -11,22 +11,26 @@ import java.util.Objects;
 @Table(name = "consultas")
 public class Consulta {
 
-    public Consulta() {
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "medico_id")
     private Medico medico;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "paciente_id")
     private Paciente paciente;
-
+    @Enumerated(EnumType.STRING)
+    @Column(name = "motivo_cancelamento")
+    private MotivoCancelamento motivo;
     private LocalDateTime data;
+
+    public Consulta() {
+    }
+
+    public void cancelar(MotivoCancelamento motivo) {
+        this.motivo = motivo;
+    }
 
     public LocalDateTime getData() {
         return data;
@@ -78,6 +82,7 @@ public class Consulta {
                 "id=" + id +
                 ", medico=" + medico +
                 ", paciente=" + paciente +
+                ", motivo=" + motivo +
                 ", data=" + data +
                 '}';
     }

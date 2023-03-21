@@ -1,12 +1,12 @@
 package med.voll.api.consultas;
 
 import med.voll.api.domain.medicos.Especialidade;
-import med.voll.api.domain.medicos.Medico;
-import med.voll.api.domain.pacientes.Paciente;
 
-public record DadosDetalhamentoConsulta(Long id, Medico medico, Paciente paciente, Especialidade especialidade) {
+import java.time.LocalDateTime;
 
-    public DadosDetalhamentoConsulta(Consulta c){
-        this(c.getId(), c.getMedico(), c.getPaciente(), c.getMedico().getEspecialidade());
+public record DadosDetalhamentoConsulta(Long id, Long idMedico, Long idPaciente, LocalDateTime data) {
+
+    public DadosDetalhamentoConsulta(Consulta c) {
+        this(c.getId(), c.getMedico().getId(), c.getPaciente().getId(), c.getData());
     }
 }

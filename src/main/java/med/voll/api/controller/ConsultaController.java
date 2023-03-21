@@ -2,10 +2,7 @@ package med.voll.api.controller;
 
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
-import med.voll.api.consultas.Consulta;
-import med.voll.api.consultas.ConsultaService;
-import med.voll.api.consultas.DadosAgendamentoConsulta;
-import med.voll.api.consultas.DadosDetalhamentoConsulta;
+import med.voll.api.consultas.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,14 +20,14 @@ public class ConsultaController {
     @PostMapping
     @Transactional
     public ResponseEntity<?> agendar(@RequestBody @Valid DadosAgendamentoConsulta dados) {
-        Consulta c = consultaService.agendar(dados);
-        return ResponseEntity.ok(new DadosDetalhamentoConsulta(c));
+        var consulta = consultaService.agendar(dados);
+        return ResponseEntity.ok(consulta);
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping
     @Transactional
-    public ResponseEntity<?> cancelar(@PathVariable Long id) {
-        consultaService.cancelar(id);
+    public ResponseEntity<Void> cancelar(@RequestBody @Valid DadosCancelamentoConsulta dados) {
+        consultaService.cancelar(dados);
         return ResponseEntity.noContent().build();
     }
 

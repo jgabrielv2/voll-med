@@ -63,7 +63,7 @@ public class Paciente {
         return endereco;
     }
 
-    public boolean getAtivo() {
+    public boolean isAtivo() {
         return ativo;
     }
 

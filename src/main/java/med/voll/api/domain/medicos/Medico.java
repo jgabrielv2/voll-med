@@ -39,7 +39,7 @@ public class Medico {
 
     private boolean ativo;
 
-    public Medico (DadosCadastroMedico dadosCadastroMedico){
+    public Medico(DadosCadastroMedico dadosCadastroMedico) {
         this.ativo = true;
         this.nome = dadosCadastroMedico.nome();
         this.crm = dadosCadastroMedico.crm();
@@ -49,19 +49,19 @@ public class Medico {
         this.endereco = new Endereco(dadosCadastroMedico.endereco());
     }
 
-    public void atualizarInformacoes(DadosAtualizacaoMedico dados){
-        if (dados.nome() != null){
+    public void atualizarInformacoes(DadosAtualizacaoMedico dados) {
+        if (dados.nome() != null) {
             this.nome = dados.nome();
         }
-        if (dados.telefone() != null){
+        if (dados.telefone() != null) {
             this.telefone = dados.telefone();
         }
 
-        if (dados.endereco() != null){
+        if (dados.endereco() != null) {
             this.endereco.atualizarInformacoes(dados.endereco());
         }
 
-        if (dados.email() != null){
+        if (dados.email() != null) {
             this.email = dados.email();
         }
     }
