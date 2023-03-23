@@ -1,4 +1,4 @@
-package med.voll.api.consultas.validacao;
+package med.voll.api.consultas.validacao.agendamento;
 
 import med.voll.api.consultas.DadosAgendamentoConsulta;
 import org.springframework.stereotype.Component;
@@ -7,7 +7,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 
 @Component
-public class AntecedenciaMarcacao implements ValidadorDeConsulta {
+public class AntecedenciaMarcacao implements ValidadorAgendamentoDeConsulta {
     @Override
     public void validar(DadosAgendamentoConsulta dados) {
 

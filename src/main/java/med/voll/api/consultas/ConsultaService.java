@@ -1,14 +1,13 @@
 package med.voll.api.consultas;
 
-import med.voll.api.consultas.validacao.ValidadorDeConsulta;
+import med.voll.api.consultas.validacao.agendamento.ValidadorAgendamentoDeConsulta;
+import med.voll.api.consultas.validacao.cancelamento.ValidadorCancelamentoConsulta;
 import med.voll.api.domain.medicos.Medico;
 import med.voll.api.domain.medicos.MedicoRepository;
 import med.voll.api.domain.pacientes.Paciente;
 import med.voll.api.domain.pacientes.PacienteRepository;
 import org.springframework.stereotype.Service;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @SuppressWarnings("ClassHasNoToStringMethod")
@@ -18,13 +17,18 @@ public class ConsultaService {
     private final ConsultaRepository consultaRepository;
     private final MedicoRepository medicoRepository;
     private final PacienteRepository pacienteRepository;
-    private final List<ValidadorDeConsulta> validadores;
+    private final List<ValidadorAgendamentoDeConsulta> validadoresAgendamento;
 
-    public ConsultaService(ConsultaRepository consultaRepository, MedicoRepository medicoRepository, PacienteRepository pacienteRepository, List<ValidadorDeConsulta> validadores) {
+    private final List<ValidadorCancelamentoConsulta> validadoresCancelamentoConsulta;
+
+    public ConsultaService(ConsultaRepository consultaRepository, MedicoRepository medicoRepository,
+                           PacienteRepository pacienteRepository, List<ValidadorAgendamentoDeConsulta> validadoresAgendamento,
+                           List<ValidadorCancelamentoConsulta> validadoresCancelamentoConsulta) {
         this.consultaRepository = consultaRepository;
         this.medicoRepository = medicoRepository;
         this.pacienteRepository = pacienteRepository;
-        this.validadores = validadores;
+        this.validadoresAgendamento = validadoresAgendamento;
+        this.validadoresCancelamentoConsulta = validadoresCancelamentoConsulta;
 
     }
 
@@ -38,7 +42,7 @@ public class ConsultaService {
             throw new IllegalArgumentException("Médico não encontrado com o Id fornecido");
         }
 
-        validadores.forEach(v -> v.validar(dados));
+        validadoresAgendamento.forEach(v -> v.validar(dados));
 
 
         Paciente p = pacienteRepository.getReferenceById(dados.idPaciente());
@@ -55,6 +59,13 @@ public class ConsultaService {
         return new DadosDetalhamentoConsulta(c);
     }
 
+    public List<DadosDetalhamentoConsulta> listar(){
+        return consultaRepository.findAll().stream().map(DadosDetalhamentoConsulta::new).toList();
+    }
+
+    public DadosDetalhamentoConsulta detalhar(Long id){
+       return new DadosDetalhamentoConsulta(consultaRepository.getReferenceById(id));
+    }
 
     private Medico escolherMedico(DadosAgendamentoConsulta dados) {
         if (dados.idMedico() != null) {
@@ -67,15 +78,13 @@ public class ConsultaService {
     }
 
     public void cancelar(DadosCancelamentoConsulta dados) {
-        if (consultaRepository.existsById(dados.idConsulta())) {
+        if (!consultaRepository.existsById(dados.idConsulta())) {
             throw new IllegalArgumentException("Não existe consulta com a Id informada");
         }
+
+        validadoresCancelamentoConsulta.forEach(v -> v.validar(dados));
         var consulta = consultaRepository.getReferenceById(dados.idConsulta());
 
-//      if (consulta.getData().minusHours(24).isBefore(LocalDateTime.now())){
-        if (Duration.between(LocalDateTime.now(), consulta.getData()).toHours() > 24) {
-            throw new IllegalArgumentException("A consulta somente poderá ser desmarcada com antecedência mínima de 24 horas");
-        }
         consulta.cancelar(dados.motivo());
     }
 }

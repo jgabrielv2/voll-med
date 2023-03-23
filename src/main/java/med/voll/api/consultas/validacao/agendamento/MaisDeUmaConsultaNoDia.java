@@ -1,11 +1,11 @@
-package med.voll.api.consultas.validacao;
+package med.voll.api.consultas.validacao.agendamento;
 
 import med.voll.api.consultas.ConsultaRepository;
 import med.voll.api.consultas.DadosAgendamentoConsulta;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MaisDeUmaConsultaNoDia implements ValidadorDeConsulta {
+public class MaisDeUmaConsultaNoDia implements ValidadorAgendamentoDeConsulta {
 
     private final ConsultaRepository consultaRepository;
 

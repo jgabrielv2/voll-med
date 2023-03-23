@@ -1,7 +1,7 @@
-package med.voll.api.consultas.validacao;
+package med.voll.api.consultas.validacao.agendamento;
 
 import med.voll.api.consultas.DadosAgendamentoConsulta;
 
-public interface ValidadorDeConsulta {
+public interface ValidadorAgendamentoDeConsulta {
     void validar(DadosAgendamentoConsulta dados);
 }

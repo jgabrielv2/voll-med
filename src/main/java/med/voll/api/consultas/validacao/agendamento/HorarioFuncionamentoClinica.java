@@ -1,4 +1,4 @@
-package med.voll.api.consultas.validacao;
+package med.voll.api.consultas.validacao.agendamento;
 
 import med.voll.api.consultas.DadosAgendamentoConsulta;
 import org.springframework.stereotype.Component;
@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import java.time.DayOfWeek;
 
 @Component
-public class HorarioFuncionamentoClinica implements ValidadorDeConsulta {
+public class HorarioFuncionamentoClinica implements ValidadorAgendamentoDeConsulta {
 
     @Override
     public void validar(DadosAgendamentoConsulta dados) {

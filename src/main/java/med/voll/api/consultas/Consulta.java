@@ -56,6 +56,10 @@ public class Consulta {
         this.medico = medico;
     }
 
+    public MotivoCancelamento getMotivo() {
+        return motivo;
+    }
+
     public Paciente getPaciente() {
         return paciente;
     }
