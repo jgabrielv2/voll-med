@@ -1,5 +1,6 @@
 package med.voll.api.controller;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import med.voll.api.domain.pacientes.*;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @SuppressWarnings("ClassHasNoToStringMethod")
+@SecurityRequirement(name = "bearer-key")
 @RestController
 @RequestMapping("pacientes")
 public class PacienteController {
@@ -23,7 +25,7 @@ public class PacienteController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity cadastrar(@RequestBody @Valid DadosCadastroPaciente dados, UriComponentsBuilder uriComponentsBuilder) {
+    public ResponseEntity<DadosDetalhamentoPaciente> cadastrar(@RequestBody @Valid DadosCadastroPaciente dados, UriComponentsBuilder uriComponentsBuilder) {
         Paciente p = new Paciente(dados);
         pacienteRepository.save(p);
 
@@ -33,20 +35,20 @@ public class PacienteController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity detalhar(@PathVariable Long id) {
+    public ResponseEntity<DadosDetalhamentoPaciente> detalhar(@PathVariable Long id) {
         Paciente p = pacienteRepository.getReferenceById(id);
         return ResponseEntity.ok(new DadosDetalhamentoPaciente(p));
     }
 
     @GetMapping
-    public ResponseEntity<Page<DadosListagemPaciente>> listar(@PageableDefault(size = 10, sort = {"nome"}) Pageable paginacao) {
+    public ResponseEntity<Page<DadosListagemPaciente>> listar(@PageableDefault(sort = {"nome"}) Pageable paginacao) {
         Page<DadosListagemPaciente> listagemPacientes = pacienteRepository.findAllByAtivoTrue(paginacao).map(DadosListagemPaciente::new);
         return ResponseEntity.ok(listagemPacientes);
     }
 
     @PutMapping
     @Transactional
-    public ResponseEntity atualizar(@RequestBody DadosAtualizacaoPaciente dados) {
+    public ResponseEntity<DadosDetalhamentoPaciente> atualizar(@RequestBody DadosAtualizacaoPaciente dados) {
         Paciente p = pacienteRepository.getReferenceById(dados.id());
         p.atualizarInformacoes(dados);
         return ResponseEntity.ok(new DadosDetalhamentoPaciente(p));
@@ -54,7 +56,7 @@ public class PacienteController {
 
     @DeleteMapping("{id}")
     @Transactional
-    public ResponseEntity excluir(@PathVariable Long id) {
+    public ResponseEntity<Void> excluir(@PathVariable Long id) {
         Paciente p = pacienteRepository.getReferenceById(id);
         p.excluir();
         return ResponseEntity.noContent().build();

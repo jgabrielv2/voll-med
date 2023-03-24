@@ -1,5 +1,6 @@
 package med.voll.api.controller;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import med.voll.api.domain.medicos.*;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @SuppressWarnings("ClassHasNoToStringMethod")
+@SecurityRequirement(name = "bearer-key")
 @RestController
 @RequestMapping("medicos")
 public class MedicoController {
@@ -23,7 +25,7 @@ public class MedicoController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity cadastrar(@RequestBody @Valid DadosCadastroMedico dados, UriComponentsBuilder uriComponentsBuilder) {
+    public ResponseEntity<DadosDetalhamentoMedico> cadastrar(@RequestBody @Valid DadosCadastroMedico dados, UriComponentsBuilder uriComponentsBuilder) {
 
         Medico m = new Medico(dados);
         medicoRepository.save(m);
@@ -34,7 +36,7 @@ public class MedicoController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity detalhar(@PathVariable Long id) {
+    public ResponseEntity<DadosDetalhamentoMedico> detalhar(@PathVariable Long id) {
         Medico m = medicoRepository.getReferenceById(id);
         return ResponseEntity.ok(new DadosDetalhamentoMedico(m));
     }
@@ -49,7 +51,7 @@ public class MedicoController {
 
     @PutMapping
     @Transactional
-    public ResponseEntity atualizar(@RequestBody @Valid DadosAtualizacaoMedico dados) {
+    public ResponseEntity<DadosDetalhamentoMedico> atualizar(@RequestBody @Valid DadosAtualizacaoMedico dados) {
         Medico m = medicoRepository.getReferenceById(dados.id());
         m.atualizarInformacoes(dados);
         return ResponseEntity.ok(new DadosDetalhamentoMedico(m));
@@ -57,7 +59,7 @@ public class MedicoController {
 
     @DeleteMapping("{id}")
     @Transactional
-    public ResponseEntity excluir(@PathVariable Long id) {
+    public ResponseEntity<Void> excluir(@PathVariable Long id) {
         Medico m = medicoRepository.getReferenceById(id);
         m.excluir();
         return ResponseEntity.noContent().build();
