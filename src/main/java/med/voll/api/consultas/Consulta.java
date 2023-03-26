@@ -28,6 +28,14 @@ public class Consulta {
     public Consulta() {
     }
 
+    public Consulta(Long id, Medico medico, Paciente paciente, MotivoCancelamento motivo, LocalDateTime data) {
+        this.id = id;
+        this.medico = medico;
+        this.paciente = paciente;
+        this.motivo = motivo;
+        this.data = data;
+    }
+
     public void cancelar(MotivoCancelamento motivo) {
         this.motivo = motivo;
     }
